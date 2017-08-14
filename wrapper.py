@@ -1,7 +1,23 @@
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from builtins import super
+from future import standard_library
+standard_library.install_aliases()
 import unicorn
 import itertools
 import functools
 import IPython
+
+# partialmethod for python2.7 support
+# https://gist.github.com/carymrobbins/8940382
+class partialmethod(functools.partial):
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        return functools.partial(self.func, instance,
+                       *(self.args or ()), **(self.keywords or {}))
 
 # @formatter:off
 arch_mode_matrix = [('arm', unicorn.UC_ARCH_ARM,     (('arm', unicorn.UC_MODE_ARM),
@@ -40,8 +56,8 @@ class UCFactory(object):
         for arch in arch_mode_matrix:
             for mode in arch[2]:
                 name = '{}_{}'.format(arch[0], mode[0])
-                init_func = functools.partialmethod(UCWrapper.__init__, arch[1], mode[1], arch[0])
-                setattr(self, name, type(name+"_mu", (UCWrapper,), {'__init__': init_func}))
+                init_func = partialmethod(UCWrapper.__init__, arch[1], mode[1], arch[0])
+                setattr(self, name, type(str(name+"_mu"), (UCWrapper,), {'__init__': init_func}))
 
 
 class UCWrapper(unicorn.Uc):
@@ -169,7 +185,7 @@ class Tree(object):
             else:
                 return
         name = "_".join(['UC_Node'] + [y.data.lower() for y in parent_list])
-        cls = type(name, (object,), {})
+        cls = type(str(name), (object,), {})
         for x in self.nodes:
             setattr(cls,  x.data.lower(), x.attrify(parent_list + [self], leaf_action))
         return cls()
