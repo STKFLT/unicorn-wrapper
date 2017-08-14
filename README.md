@@ -6,6 +6,12 @@ Currently only some register and memory actions are supported. As time goes on m
 
 ## Examples
 ```python
+# Initializing an emulator:
+# Unicorn
+mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
+#unicorn wrapper
+mu = wrapper.factory.arm64_arm()
+
 # mapping a memory segment:
 # Unicorn
 mu.mem_map(ADDRESS, 2 * 1024 * 1024)
