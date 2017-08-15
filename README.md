@@ -1,6 +1,6 @@
 # Unicorn-wrapper
 
-A wrapper that uses Python's language features to streamline the interface to Unicorn Engine. Not even close to functional yet.
+A wrapper that uses Python's language features to streamline the interface to Unicorn Engine. Mostly functional.
 
 Currently only some register and memory actions are supported. As time goes on more features will be converted with the goal of avoiding the use of constants and keeping things as Pythonic™ as possible.
 
