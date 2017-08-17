@@ -2,7 +2,7 @@
 
 A wrapper that uses Python's language features to streamline the interface to Unicorn Engine. Mostly functional.
 
-Currently only some register and memory actions are supported. As time goes on more features will be converted with the goal of avoiding the use of constants and keeping things as Pythonic™ as possible.
+Currently you can read and write registers and memory and apply hooks. As time goes on more features will be converted with the goal of avoiding the use of constants and keeping things as Pythonic™ as possible.
 
 ## Examples
 ```python
@@ -41,4 +41,16 @@ mu.reg.x11
 mu.reg_write(UC_ARM64_REG_X11, 0x12345678)
 #unicorn_wrapper
 mu.reg.x11 = 0x12345678
+
+#hooking blocks
+#Unicorn
+def hook_block(uc, address, size, user_data):
+    print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(address, size))
+mu.hook_add(UC_HOOK_BLOCK, hook_block)
+#unicorn-wrapper
+@Hook.hook_block
+def hook_block(uc, address, size, user_data):
+    print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(address, size))
+# or
+mu.hook_block(hook_block)
 ```
